@@ -47,4 +47,8 @@ public class PessoaService {
 
         return pessoaConverter.mapToDto(pessoa);
     }
+
+    public void delete(Integer id){
+        repository.delete(repository.findById(id).get());
+    }
 }

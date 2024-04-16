@@ -14,6 +14,7 @@ public interface PessoaRepository extends JpaRepository<PessoaEntity, Integer> {
 
     Optional<PessoaEntity> findByCnpjEquals(String cnpj);
 
+    Page<PessoaEntity> findByNomeIgnoreCaseContaining(String nome, Pageable pageable);
 
     Page<PessoaEntity> findAll(Pageable pageable);
 }

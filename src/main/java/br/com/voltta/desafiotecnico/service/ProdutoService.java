@@ -1,6 +1,7 @@
 package br.com.voltta.desafiotecnico.service;
 
 import br.com.voltta.desafiotecnico.dto.ProdutoDto;
+import br.com.voltta.desafiotecnico.dto.ProdutoInsertDto;
 import br.com.voltta.desafiotecnico.entity.PessoaEntity;
 import br.com.voltta.desafiotecnico.entity.ProdutoEntity;
 import br.com.voltta.desafiotecnico.repository.PessoaRepository;
@@ -31,8 +32,8 @@ public class ProdutoService {
         return repository.findAll(pageable);
     }
 
-    public ProdutoEntity insert(ProdutoDto dto){
-        PessoaEntity pessoa = verifyPessoa(dto.fabricante().cnpj());
+    public ProdutoInsertDto insert(ProdutoInsertDto dto){
+        PessoaEntity pessoa = pessoaRepository.findById(dto.fabricanteID()).get();
 
         ProdutoEntity produto =  new ProdutoEntity(
                 null,
@@ -44,7 +45,7 @@ public class ProdutoService {
 
         produto = repository.save(produto);
 
-        return produto;
+        return converter.mapToInsertDto(produto);
     }
 
     public PessoaEntity verifyPessoa(String cnpj){
@@ -54,17 +55,21 @@ public class ProdutoService {
 
     }
 
-    public ProdutoDto update(ProdutoDto dto){
+    public ProdutoInsertDto update(ProdutoInsertDto dto){
         ProdutoEntity produto = repository.findByCodigoBarrasEquals(dto.codigoBarras()).get();
 
         produto.setNome(dto.nome());
         produto.setDescricao(dto.descricao());
         produto.setCodigoBarras(dto.codigoBarras());
-        produto.setFabricante(verifyPessoa(dto.fabricante().cnpj()));
+        produto.setFabricante(pessoaRepository.findById(dto.fabricanteID()).get());
 
         repository.save(produto);
 
-        return converter.mapToDto(produto);
+        return converter.mapToInsertDto(produto);
+    }
+
+    public void delete(Integer id){
+        repository.delete(repository.findById(id).get());
     }
 
 }

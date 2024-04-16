@@ -1,6 +1,7 @@
 package br.com.voltta.desafiotecnico.controller;
 
 import br.com.voltta.desafiotecnico.dto.ProdutoDto;
+import br.com.voltta.desafiotecnico.dto.ProdutoInsertDto;
 import br.com.voltta.desafiotecnico.entity.ProdutoEntity;
 import br.com.voltta.desafiotecnico.repository.ProdutoRepository;
 import br.com.voltta.desafiotecnico.service.ProdutoService;
@@ -36,7 +37,7 @@ public class ProdutoController {
     @Operation(summary = "Criar um novo produto")
     @PostMapping
     @Transactional
-    public ResponseEntity<ProdutoEntity> createPessoa(@RequestBody @Valid ProdutoDto dto){
+    public ResponseEntity<ProdutoInsertDto> createPessoa(@RequestBody @Valid ProdutoInsertDto dto){
         return ResponseEntity.ok(service.insert(dto));
     }
 
@@ -60,8 +61,13 @@ public class ProdutoController {
 
     @Operation(summary = "Edita os dados de um produto")
     @PutMapping
-    public ResponseEntity<ProdutoDto> update(@RequestBody @Valid ProdutoDto dto){
+    public ResponseEntity<ProdutoInsertDto> update(@RequestBody @Valid ProdutoInsertDto dto){
         return ResponseEntity.ok(service.update(dto));
     }
 
+    @Operation(summary = "Exclui os dados de um produto específico")
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Integer id){
+        service.delete(id);
+    }
 }

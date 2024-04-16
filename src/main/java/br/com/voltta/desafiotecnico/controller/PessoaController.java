@@ -50,10 +50,26 @@ public class PessoaController {
         pageable = PageRequest.of(page,size);
         return repository.findByCnpjEquals(cnpj, pageable);
     }
+    @Operation(summary = "Busca pessoa pelo nome")
+    @GetMapping("/pessoas")
+    public Page<PessoaEntity> findByName(@Parameter(example = "Voltta")@RequestParam String nome,
+                                         @ApiIgnore Pageable pageable,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size){
+        pageable = PageRequest.of(page,size);
+        return repository.findByNomeIgnoreCaseContaining(nome, pageable);
+    }
+
 
     @Operation(summary = "Edita os dados de uma pessoa")
     @PutMapping
     public ResponseEntity<PessoaDto> update(@RequestBody @Valid PessoaDto dto){
         return ResponseEntity.ok(service.update(dto));
+    }
+
+    @Operation(summary = "Exclui dados de uma pessoa específica")
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Integer id){
+        service.delete(id);
     }
 }
